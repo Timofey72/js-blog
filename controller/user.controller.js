@@ -20,9 +20,8 @@ class UserController {
     ])
   }
 
-  async getUsers(req, res) {
-    const users = await pool.query(this.GET_USERS_QUERY)
-    res.json(users.rows)
+  async getUsers() {
+    return await pool.query(this.GET_USERS_QUERY)
   }
 
   async getOneUser(req, login = false) {
@@ -45,29 +44,12 @@ class UserController {
         .json({ error: 'Не указан идентификатор пользователя' })
     }
 
-    pool
-      .query(this.UPDATE_USER_QUERY, [
-        id,
-        name,
-        surname,
-        email,
-        avatar_url,
-        passwordHash,
-      ])
-      .then(data => res.json(data.rows[0]))
-      .catch(() =>
-        res.status(400).json({ error: 'Не удалось обновить данные' }),
-      )
+    return await pool.query(this.UPDATE_USER_QUERY, [id, name, surname, email, avatar_url, passwordHash])
   }
 
-  async deleteUser(req, res) {
+  async deleteUser(req) {
     const { id } = req.params
-    pool
-      .query(this.DELETE_USER_QUERY, [id])
-      .then(data => (data.rows[0] ? res.json(data.rows[0]) : res.json({})))
-      .catch(() =>
-        res.status(400).json({ error: 'Не удалось удалить пользователя' }),
-      )
+    return await pool.query(this.DELETE_USER_QUERY, [id])
   }
 }
 

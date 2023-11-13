@@ -1,7 +1,7 @@
 import { validationResult } from 'express-validator'
 import bcrypt from 'bcrypt'
 
-import userController from './user.controller.js'
+import userController from '../controller/user.controller.js'
 import { encryptPassword } from '../utils/encryptionPassword.js'
 import { createToken } from '../utils/authToken.js'
 

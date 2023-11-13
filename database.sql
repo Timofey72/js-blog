@@ -8,3 +8,16 @@ CREATE TABLE IF NOT EXISTS person(
   created TIMESTAMPTZ,
   updated TIMESTAMPTZ
 );
+
+CREATE TABLE IF NOT EXISTS post(
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(124) NOT NULL,
+  text VARCHAR(512) NOT NULL,
+  tags TEXT [],
+  image_url VARCHAR(255),
+  views_count INTEGER DEFAULT 0,
+  created TIMESTAMPTZ,
+  user_id INTEGER,
+  FOREIGN KEY (user_id) REFERENCES person (id)
+);
+
