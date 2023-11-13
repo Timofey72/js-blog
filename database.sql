@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS person(
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(124) NOT NULL,
+  surname VARCHAR(124) NOT NULL,
+  email VARCHAR(124) NOT NULL UNIQUE,
+  password_hash VARCHAR NOT NULL,
+  avatar_url VARCHAR(255),
+  created TIMESTAMPTZ,
+  updated TIMESTAMPTZ
+);
