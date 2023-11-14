@@ -49,6 +49,12 @@ export const getMe = (req, res) => {
 }
 
 export const login = (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    return res.status(400).json(errors.array())
+  }
+
+  
   userController
     .getOneUser(req, true)
     .then(async data => {

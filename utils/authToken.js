@@ -6,7 +6,7 @@ const SECRET_KEY = process.env.SECRET_KEY || 'secret_key'
 export const createToken = userData => {
   return jwt.sign(
     {
-      _email: userData.email,
+      _id: userData.id,
     },
     SECRET_KEY,
     {
@@ -24,7 +24,7 @@ export const chechAuth = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, SECRET_KEY)
 
-    req.body.email = decoded._email
+    req.body.userId = decoded._id
     next()
   } catch (err) {
     res.status(403).json({ message: 'Нет доступа' })

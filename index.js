@@ -16,11 +16,11 @@ app.post('/auth/login', loginValidation, UserRoutes.login)
 app.post('/auth/register', registerValidation, UserRoutes.register)
 app.get('/auth/me', chechAuth, UserRoutes.getMe)
 
-app.post('/post', postCreateValidation, PostRoutes.createPost)
-app.put('/post', postCreateValidation, PostRoutes.updatePost)
+app.post('/post', postCreateValidation, chechAuth, PostRoutes.createPost)
+app.put('/post', chechAuth, PostRoutes.updatePost)
 app.get('/post/:id', PostRoutes.getOnePost)
 app.get('/post', PostRoutes.getPosts)
-app.delete('/post/:id', PostRoutes.deletePost)
+app.delete('/post/:id', chechAuth, PostRoutes.deletePost)
 
 
 
