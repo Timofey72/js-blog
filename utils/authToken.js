@@ -15,7 +15,7 @@ export const createToken = userData => {
   )
 }
 
-export const chechAuth = (req, res, next) => {
+const chechAuth = (req, res, next) => {
   const token = req.headers.authorization
   if (!token) {
     return res.status(403).json({ message: 'Нет доступа' })
@@ -30,3 +30,5 @@ export const chechAuth = (req, res, next) => {
     res.status(403).json({ message: 'Нет доступа' })
   }
 }
+
+export default chechAuth
