@@ -1,13 +1,26 @@
 import pool from '../db.js'
 
 class PostController {
-  CREATE_POST_QUERY =
-    'INSERT INTO post (title, text, tags, image_url, views_count, created, user_id) VALUES ($1, $2, $3, $4, 0, NOW(), $5) RETURNING *'
-  GET_POSTS_QUERY = 'SELECT * FROM post'
-  GET_POST_QUERY =
-    'SELECT post.*, person.name AS user_name, person.surname AS user_surname, person.created AS user_created, person.updated AS user_updated FROM post JOIN person ON post.user_id = person.id WHERE post.id = $1'
-  UPDATE_POST_QUERY =
-    'UPDATE post set title = COALESCE($2, title), text = COALESCE($3, text), tags = COALESCE($4, tags), image_url = COALESCE($5, image_url), views_count = COALESCE($6, views_count) WHERE id = $1 RETURNING *'
+  CREATE_POST_QUERY = `
+    INSERT INTO post (title, text, tags, image_url, views_count, created, user_id)
+    VALUES ($1, $2, $3, $4, 0, NOW(), $5)
+    RETURNING *
+  `
+  GET_POSTS_QUERY = 'SELECT * FROM post ORDER BY post.id'
+  GET_POST_QUERY = `
+    UPDATE post
+    SET views_count = views_count + 1
+    FROM person
+    WHERE post.id = $1 AND post.user_id = person.id
+    RETURNING post.*, person.name AS user_name, person.surname AS user_surname, person.created AS user_created, person.updated AS user_updated;
+  `
+  UPDATE_POST_QUERY = `
+    UPDATE post
+    SET title = COALESCE($2, title), text = COALESCE($3, text), tags = COALESCE($4, tags),
+        image_url = COALESCE($5, image_url), views_count = COALESCE($6, views_count)
+    WHERE id = $1
+    RETURNING *
+  `
   DELETE_POST_QUERY = 'DELETE FROM post WHERE id = $1'
 
   async createPost(req) {

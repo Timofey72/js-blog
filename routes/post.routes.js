@@ -1,23 +1,7 @@
-import { validationResult } from 'express-validator'
-
 import postController from '../controller/post.controller.js'
-
-const checkPosts = (res, data) => {
-  let postData = data.rows
-  if (postData.length === 0) {
-    return res.status(404).json({ message: 'Ничего не найдено' })
-  }
-
-  return postData[0]
-}
+import { isPostExists } from '../utils/checkOwner.js'
 
 export const createPost = async (req, res) => {
-  console.log(req.body)
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json(errors.array())
-  }
-
   postController
     .createPost(req)
     .then(data => {
@@ -29,59 +13,29 @@ export const createPost = async (req, res) => {
 }
 
 export const updatePost = (req, res) => {
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json(errors.array())
-  }
-
-  // get post
   postController
-    .getOnePost(req)
+    .updatePost(req)
     .then(data => {
-      const postData = checkPosts(res, data)
-
-      if (req.body.userId !== postData.user_id) {
-        return res.status(403).json({ message: 'Нет доступа' })
-      }
-
-      // update post
-      postController
-        .updatePost(req)
-        .then(data => {
-          res.json(postData)
-        })
-        .catch(() => {
-          res.status(500).json({ message: 'Произошла ошибка' })
-        })
+      res.json(data.rows)
     })
-    .catch(err => {
-      res.status(500).json({ message: `Произошла ошибка: ${err}` })
+    .catch(() => {
+      res.status(500).json({ message: 'Произошла ошибка' })
     })
 }
 
 export const getOnePost = (req, res) => {
-  // get post
   postController
     .getOnePost(req)
     .then(data => {
-      const postData = checkPosts(res, data)
-
-      // update views_count
-      postData.views_count += 1
-      const fakeReq = {
-        body: {
-          id: postData.id,
-          viewsCount: postData.views_count,
-        },
+      const postData = isPostExists(data)
+      if (!postData) {
+        return res.status(404).json({ message: 'Ничего не найдено' })
       }
-      postController
-        .updatePost(fakeReq)
-        .catch(() => res.status(500).send('error'))
 
       res.json(postData)
     })
-    .catch(err => {
-      res.status(500).json({ message: `Произошла ошибка: ${err}` })
+    .catch(() => {
+      res.status(500).json({ message: 'Произошла ошибка' })
     })
 }
 
@@ -97,32 +51,12 @@ export const getPosts = (req, res) => {
 }
 
 export const deletePost = (req, res) => {
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    return res.status(400).json(errors.array())
-  }
-
-  // get post
   postController
-    .getOnePost(req)
-    .then(data => {
-      const postData = checkPosts(res, data)
-
-      if (req.body.userId !== postData.user_id) {
-        return res.status(403).json({ message: 'Нет доступа' })
-      }
-
-      // delete post
-      postController
-        .deletePost(req)
-        .then(() => {
-          res.send('Успешно удалено.')
-        })
-        .catch(() => {
-          res.status(500).json({ message: 'Произошла ошибка' })
-        })
+    .deletePost(req)
+    .then(() => {
+      res.json({ status: 'success' })
     })
-    .catch(err => {
-      res.status(500).json({ message: `Произошла ошибка: ${err}` })
+    .catch(() => {
+      res.status(500).json({ message: 'Произошла ошибка' })
     })
 }
