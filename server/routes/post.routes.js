@@ -43,7 +43,14 @@ export const getPosts = (req, res) => {
   postController
     .getPosts(req)
     .then((data) => {
-      res.json(data.rows);
+      const posts = data.rows;
+
+      const tags = posts
+        .map((obj) => obj.tags)
+        .flat()
+        .filter((tag) => tag !== null);
+      const lastTags = [...new Set(tags)].slice(0, 5);
+      res.json({ posts, lastTags });
     })
     .catch(() => {
       res.status(500).json({ message: 'Произошла ошибка' });

@@ -6,7 +6,12 @@ class PostController {
     VALUES ($1, $2, $3, $4, 0, NOW(), $5)
     RETURNING *
   `;
-  GET_POSTS_QUERY = 'SELECT * FROM post ORDER BY post.id';
+  GET_POSTS_QUERY = `
+    SELECT post.*, person.name AS user_name, person.surname AS user_surname, person.avatar_url AS user_avatar
+    FROM post
+    JOIN person ON person.id = post.user_id
+    ORDER BY post.created DESC
+  `;
   GET_POST_QUERY = `
     UPDATE post
     SET views_count = views_count + 1
