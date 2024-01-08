@@ -7,7 +7,8 @@ export const createPost = async (req, res) => {
     .then((data) => {
       res.json(data.rows[0]);
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       res.status(500).json({ message: 'Произошла ошибка' });
     });
 };

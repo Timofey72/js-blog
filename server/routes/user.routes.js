@@ -23,7 +23,7 @@ export const register = async (req, res) => {
 
 export const getMe = (req, res) => {
   userController
-    .getOneUser(req)
+    .getUserById(req)
     .then((data) => {
       const userData = data.rows;
       if (userData.length === 0) {
@@ -32,7 +32,8 @@ export const getMe = (req, res) => {
 
       res.json(userData[0]);
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       res.status(500).json({ error: 'Произошла ошибка' });
     });
 };
