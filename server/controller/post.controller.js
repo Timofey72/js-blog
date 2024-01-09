@@ -17,7 +17,7 @@ class PostController {
     SET views_count = views_count + 1
     FROM person
     WHERE post.id = $1 AND post.user_id = person.id
-    RETURNING post.*, person.name AS user_name, person.surname AS user_surname, person.created AS user_created, person.updated AS user_updated;
+    RETURNING post.*, person.id AS user_id, person.name AS user_name, person.surname AS user_surname, person.created AS user_created, person.updated AS user_updated;
   `;
   UPDATE_POST_QUERY = `
     UPDATE post

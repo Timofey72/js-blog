@@ -48,7 +48,7 @@ export const Post = ({
       {imageUrl && (
         <img
           className={clsx(styles.image, { [styles.imageFull]: isFullPost })}
-          src={imageUrl}
+          src={`http://127.0.0.1:4444${imageUrl}`}
           alt={'image_article_' + title.toLowerCase()}
         />
       )}

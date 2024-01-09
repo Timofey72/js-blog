@@ -11,6 +11,7 @@ import { CommentsBlock } from '../components/CommentsBlock';
 
 export const Home = () => {
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth.data);
   const postsData = useSelector((state) => state.posts);
 
   const isPostsLoading = postsData.status === 'loading';
@@ -36,7 +37,7 @@ export const Home = () => {
                 key={i}
                 id={obj.id}
                 title={obj.title}
-                imageUrl="https://res.cloudinary.com/practicaldev/image/fetch/s--UnAfrEG8--/c_imagga_scale,f_auto,fl_progressive,h_420,q_auto,w_1000/https://dev-to-uploads.s3.amazonaws.com/uploads/articles/icohm5g0axh9wjmu4oc3.png"
+                imageUrl={obj.image_url}
                 user={{
                   fullName: `${obj.user_name} ${obj.user_surname}`,
                   avatarUrl: obj.user_avatar,
@@ -45,7 +46,7 @@ export const Home = () => {
                 viewsCount={obj.viewsCount}
                 commentsCount={3}
                 tags={obj.tags}
-                isEditable
+                isEditable={userData?.id == obj.user_id}
               />
             )
           )}
